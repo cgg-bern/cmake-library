@@ -21,3 +21,6 @@ find_package(Gurobi )
 
 find_package(GMM REQUIRED)
 find_package(Gurobi REQUIRED)
+
+add_subdirectory(tests)
+
