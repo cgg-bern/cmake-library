@@ -1,5 +1,5 @@
 # Once done this will define
-#  GUROBI_FOUND - System has Gurobi
+#  Gurobi_FOUND - System has Gurobi
 #  Targets:
 #       Gurobi::GurobiC   - only the C interface
 #       Gurobi::GurobiCXX - C and C++ interface
