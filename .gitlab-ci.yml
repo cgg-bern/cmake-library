@@ -19,7 +19,6 @@ test-windows:
   script:
     - mkdir build
     - cd build
-    - cmake ../CI -G "NMake Makefiles"
-    - nmake
+    - cmake ../CI
   allow_failure: true
 
