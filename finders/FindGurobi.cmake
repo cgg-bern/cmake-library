@@ -79,7 +79,8 @@ if(NOT TARGET Gurobi::GurobiCXX)
             target_compile_definitions(GurobiCXX PRIVATE "WIN64")
         endif()
 
-        target_include_directories(GurobiCXX PRIVATE ${GUROBI_INCLUDE_DIR})
+        target_include_directories(GurobiCXX PUBLIC ${GUROBI_INCLUDE_DIR})
+        target_link_libraries(GurobiCXX PUBLIC ${GUROBI_LIBRARY})
         # We need to be able to link this into a shared library:
         set_target_properties(GurobiCXX PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
@@ -103,7 +104,7 @@ mark_as_advanced(GUROBI_INCLUDE_DIR GUROBI_LIBRARY GUROBI_CXX_LIBRARY GUROBI_BIN
 
 if(GUROBI_FOUND AND NOT TARGET Gurobi::Gurobi)
     add_library(Gurobi::GurobiC INTERFACE IMPORTED)
-    target_include_directories(Gurobi::GurobiC INTERFACE ${GMM_INCLUDE_DIR})
+    target_include_directories(Gurobi::GurobiC INTERFACE ${GUROBI_INCLUDE_DIR})
     target_link_libraries(Gurobi::GurobiC INTERFACE ${GUROBI_LIBRARY})
 
     add_library(Gurobi::Gurobi INTERFACE IMPORTED)

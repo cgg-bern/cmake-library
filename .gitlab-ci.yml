@@ -9,7 +9,8 @@ test-linux:
   script:
     - mkdir build
     - cd build
-    - cmake ../CI
+    - cmake ../CI -G Ninja
+    - ninja
 
 
 test-windows:
@@ -18,5 +19,7 @@ test-windows:
   script:
     - mkdir build
     - cd build
-    - cmake ../CI
+    - cmake ../CI -G "NMake Makefiles"
+    - nmake
+  allow_failure: true
 
