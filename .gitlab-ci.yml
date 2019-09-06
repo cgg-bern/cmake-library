@@ -10,8 +10,8 @@ test-linux:
     - mkdir build
     - cd build
     - cmake ../CI -G Ninja
-    - ninja
-
+    - cmake --build .
+    - ctest .
 
 test-windows:
   tags:
