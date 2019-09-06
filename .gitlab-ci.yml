@@ -1,6 +1,6 @@
 # image: debian:buster-20190812
 
-test:
+test-linux:
   image: gitlab.inf.unibe.ch:5001/cgg/misc/buildbox-docker:master
   tags:
     - linux
@@ -10,3 +10,13 @@ test:
     - mkdir build
     - cd build
     - cmake ../CI
+
+
+test-windows:
+  tags:
+    - windows
+  script:
+    - mkdir build
+    - cd build
+    - cmake ../CI
+
