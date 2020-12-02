@@ -153,6 +153,24 @@ macro (acg_set var value)
     set (${var} ${value} CACHE INTERNAL "")
 endmacro ()
 
+# test for OpenMP
+macro (acg_openmp)
+  if (NOT OPENMP_NOTFOUND)
+    # Set off OpenMP on Darwin architectures
+    # since it causes crashes sometimes
+#    if(NOT APPLE)
+        find_package(OpenMP)
+      if (OPENMP_FOUND)
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+        set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+        add_definitions(-DUSE_OPENMP)
+#      else ()
+#        set (OPENMP_NOTFOUND 1)
+#      endif ()
+    endif()
+  endif ()
+endmacro ()
+
 # append all files with extension "ext" in the "dirs" directories to "ret"
 # excludes all files starting with a '.' (dot)
 macro (acg_append_files ret ext)
