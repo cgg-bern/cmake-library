@@ -178,6 +178,16 @@ macro (acg_get_files_in_dir ret dir)
   endforeach ()
 endmacro ()
 
+# drop all "*T.cc" files from list
+macro (acg_drop_templates list)
+  foreach (_file ${${list}})
+    if (_file MATCHES "T.cc$")
+      set_source_files_properties(${_file} PROPERTIES HEADER_FILE_ONLY TRUE)
+      message("Deprecated naming scheme! The file ${_file} ends with T.cc indicating it is a template only implementation file. Please rename to T_impl.hh to avoid problems with several IDEs.")
+    endif ()
+  endforeach ()
+endmacro ()
+
 # copy the whole directory without svn files
 function (acg_copy_after_build target src dst)
   acg_unset (_files)
