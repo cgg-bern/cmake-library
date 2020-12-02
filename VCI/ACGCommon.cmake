@@ -251,14 +251,16 @@ function (acg_add_executable _target)
 
   # set common target properties defined in common.cmake
   acg_set_target_props (${_target})
-  
-  if (WIN32 OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
-    add_custom_command (TARGET ${_target} POST_BUILD
-                        COMMAND ${CMAKE_COMMAND} -E
-                        copy_if_different
-                          $<TARGET_FILE:${_target}>
-                          ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_BINDIR}/$<TARGET_FILE_NAME:${_target}>)
-  endif (WIN32 OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
+
+  if (NOT ACG_COMMON_DO_NOT_COPY_POST_BUILD)
+    if (WIN32 OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
+      add_custom_command (TARGET ${_target} POST_BUILD
+                          COMMAND ${CMAKE_COMMAND} -E
+                          copy_if_different
+                            $<TARGET_FILE:${_target}>
+                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_BINDIR}/$<TARGET_FILE_NAME:${_target}>)
+    endif (WIN32 OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
+  endif()
   
   if (NOT ACG_PROJECT_MACOS_BUNDLE OR NOT APPLE)
     install (TARGETS ${_target} DESTINATION ${ACG_PROJECT_BINDIR})
@@ -300,54 +302,56 @@ function (acg_add_library _target _libtype)
     endif ()
   endif ()
 
-  if ( (WIN32 AND MSVC) OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
-    if (${_type} STREQUAL SHARED)
+  if (NOT ACG_COMMON_DO_NOT_COPY_POST_BUILD)
+    if ( (WIN32 AND MSVC) OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
+      if (${_type} STREQUAL SHARED)
+        add_custom_command (TARGET ${_target} POST_BUILD
+                            COMMAND ${CMAKE_COMMAND} -E
+                            copy_if_different
+                              $<TARGET_FILE:${_target}>
+                              ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_FILE_NAME:${_target}>)
       add_custom_command (TARGET ${_target} POST_BUILD
-                          COMMAND ${CMAKE_COMMAND} -E
-                          copy_if_different
-                            $<TARGET_FILE:${_target}>
-                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_FILE_NAME:${_target}>)
-    add_custom_command (TARGET ${_target} POST_BUILD
-                          COMMAND ${CMAKE_COMMAND} -E
-                          copy_if_different
-                            $<TARGET_LINKER_FILE:${_target}>
-                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_LINKER_FILE_NAME:${_target}>)
-    elseif (${_type} STREQUAL MODULE)
-      if (NOT EXISTS ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_PLUGINDIR})
-        file (MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_PLUGINDIR})
-      endif ()
+                            COMMAND ${CMAKE_COMMAND} -E
+                            copy_if_different
+                              $<TARGET_LINKER_FILE:${_target}>
+                              ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_LINKER_FILE_NAME:${_target}>)
+      elseif (${_type} STREQUAL MODULE)
+        if (NOT EXISTS ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_PLUGINDIR})
+          file (MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_PLUGINDIR})
+        endif ()
+        add_custom_command (TARGET ${_target} POST_BUILD
+                            COMMAND ${CMAKE_COMMAND} -E
+                            copy_if_different
+                              $<TARGET_FILE:${_target}>
+                              ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_PLUGINDIR}/$<TARGET_FILE_NAME:${_target}>)
+      elseif (${_type} STREQUAL STATIC)
       add_custom_command (TARGET ${_target} POST_BUILD
-                          COMMAND ${CMAKE_COMMAND} -E
-                          copy_if_different
-                            $<TARGET_FILE:${_target}>
-                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_PLUGINDIR}/$<TARGET_FILE_NAME:${_target}>)
-    elseif (${_type} STREQUAL STATIC)
-    add_custom_command (TARGET ${_target} POST_BUILD
-                          COMMAND ${CMAKE_COMMAND} -E
-                          copy_if_different
-                            $<TARGET_FILE:${_target}>
-                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_FILE_NAME:${_target}>)
-  endif()
-  
-   
-  # make an extra copy for windows into the binary directory
-    if (${_type} STREQUAL SHARED AND WIN32)
-      add_custom_command (TARGET ${_target} POST_BUILD
-                          COMMAND ${CMAKE_COMMAND} -E
-                          copy_if_different 
-                            $<TARGET_FILE:${_target}>
-                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_BINDIR}/$<TARGET_FILE_NAME:${_target}>)
-  endif () 
-    
-  endif( (WIN32 AND MSVC) OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
-  
-  if (_and_static)
-    add_custom_command (TARGET ${_target}Static POST_BUILD
-                        COMMAND ${CMAKE_COMMAND} -E
-                        copy_if_different
-                          $<TARGET_FILE:${_target}Static>
-                          ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_FILE_NAME:${_target}Static>)
+                            COMMAND ${CMAKE_COMMAND} -E
+                            copy_if_different
+                              $<TARGET_FILE:${_target}>
+                              ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_FILE_NAME:${_target}>)
+    endif()
 
+
+    # make an extra copy for windows into the binary directory
+      if (${_type} STREQUAL SHARED AND WIN32)
+        add_custom_command (TARGET ${_target} POST_BUILD
+                            COMMAND ${CMAKE_COMMAND} -E
+                            copy_if_different
+                              $<TARGET_FILE:${_target}>
+                              ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_BINDIR}/$<TARGET_FILE_NAME:${_target}>)
+    endif ()
+
+    endif( (WIN32 AND MSVC) OR (APPLE AND NOT ACG_PROJECT_MACOS_BUNDLE))
+
+    if (_and_static)
+      add_custom_command (TARGET ${_target}Static POST_BUILD
+                          COMMAND ${CMAKE_COMMAND} -E
+                          copy_if_different
+                            $<TARGET_FILE:${_target}Static>
+                            ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_LIBDIR}/$<TARGET_FILE_NAME:${_target}Static>)
+
+    endif ()
   endif ()
  
 
