@@ -186,6 +186,21 @@ macro (acg_append_files ret ext)
   endforeach ()
 endmacro ()
 
+# append all files with extension "ext" in the "dirs" directories and its subdirectories to "ret"
+# excludes all files starting with a '.' (dot)
+macro (acg_append_files_recursive ret ext)
+  foreach (_dir ${ARGN})
+    file (GLOB_RECURSE _files "${_dir}/${ext}")
+    foreach (_file ${_files})
+      get_filename_component (_filename ${_file} NAME)
+      if (_filename MATCHES "^[.]")
+  list (REMOVE_ITEM _files ${_file})
+      endif ()
+    endforeach ()
+    list (APPEND ${ret} ${_files})
+  endforeach ()
+endmacro ()
+
 # get all files in directory, but ignore svn
 macro (acg_get_files_in_dir ret dir)
   file (GLOB_RECURSE __files RELATIVE "${dir}" "${dir}/*")
@@ -213,6 +228,18 @@ function (acg_copy_after_build target src dst)
   foreach (_file ${_files})
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${src}/${_file}" "${dst}/${_file}"
+    )
+  endforeach ()
+endfunction ()
+
+# install the whole directory without svn files
+function (acg_install_dir src dst)
+  acg_unset (_files)
+  acg_get_files_in_dir (_files ${src})
+  foreach (_file ${_files})
+    get_filename_component (_file_PATH ${_file} PATH)
+    install(FILES "${src}/${_file}"
+      DESTINATION "${dst}/${_file_PATH}"
     )
   endforeach ()
 endfunction ()

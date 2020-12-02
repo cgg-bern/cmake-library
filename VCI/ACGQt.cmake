@@ -103,3 +103,63 @@ macro (acg_qt5)
 
   endif (QT5_FOUND)
 endmacro ()
+
+#generates qt translations
+function (acg_add_translations _target _languages _sources)
+
+  string (TOUPPER ${_target} _TARGET)
+  # generate/use translation files
+  # run with UPDATE_TRANSLATIONS set to on to build qm files
+  option (UPDATE_TRANSLATIONS_${_TARGET} "Update source translation *.ts files (WARNING: make clean will delete the source .ts files! Danger!)")
+
+  set (_new_ts_files)
+  set (_ts_files)
+
+  foreach (lang ${_languages})
+    if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/translations/${_target}_${lang}.ts" OR UPDATE_TRANSLATIONS_${_TARGET})
+      list (APPEND _new_ts_files "translations/${_target}_${lang}.ts")
+    else ()
+      list (APPEND _ts_files "translations/${_target}_${lang}.ts")
+    endif ()
+  endforeach ()
+
+
+  set (_qm_files)
+  if ( _new_ts_files )
+    if (QT5_FOUND)
+      #qt5_create_translation(_qm_files ${_sources} ${_new_ts_files})
+    endif ()
+  endif ()
+
+  if ( _ts_files )
+    if (QT5_FOUND)
+      #qt5_add_translation(_qm_files2 ${_ts_files})
+    endif()
+    list (APPEND _qm_files ${_qm_files2})
+  endif ()
+
+  # create a target for the translation files ( and object files )
+  # Use this target, to update only the translations
+  add_custom_target (tr_${_target} DEPENDS ${_qm_files})
+  GROUP_PROJECT( tr_${_target} "Translations")
+
+  # Build translations with the application
+  add_dependencies(${_target} tr_${_target} )
+
+  if (NOT EXISTS ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_DATADIR}/Translations)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_DATADIR}/Translations )
+  endif ()
+
+  foreach (_qm ${_qm_files})
+    get_filename_component (_qm_name "${_qm}" NAME)
+    add_custom_command (TARGET tr_${_target} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+      copy_if_different
+      ${_qm}
+      ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_DATADIR}/Translations/${_qm_name})
+  endforeach ()
+
+  if (NOT ACG_PROJECT_MACOS_BUNDLE OR NOT APPLE)
+    install (FILES ${_qm_files} DESTINATION "${ACG_PROJECT_DATADIR}/Translations")
+  endif ()
+endfunction ()
