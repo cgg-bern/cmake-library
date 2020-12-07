@@ -1,16 +1,16 @@
 #unset cached qt variables which are set by all qt versions. version is the major number of the qt version (e.g. 4 or 5, not 4.8)
-macro (acg_unset_qt_shared_variables version)
-  if (ACG_INTERNAL_QT_LAST_VERSION)
-    if (NOT ${ACG_INTERNAL_QT_LAST_VERSION} EQUAL ${version})
+macro (vci_unset_qt_shared_variables version)
+  if (VCI_INTERNAL_QT_LAST_VERSION)
+    if (NOT ${VCI_INTERNAL_QT_LAST_VERSION} EQUAL ${version})
       unset(QT_BINARY_DIR)
       unset(QT_PLUGINS_DIR)
-      unset(ACG_INTERNAL_QT_LAST_VERSION)
+      unset(VCI_INTERNAL_QT_LAST_VERSION)
     endif()
   endif()
-  set (ACG_INTERNAL_QT_LAST_VERSION "${version}" CACHE INTERNAL "Qt Version, which was used on the last time")
+  set (VCI_INTERNAL_QT_LAST_VERSION "${version}" CACHE INTERNAL "Qt Version, which was used on the last time")
 endmacro()
 
-macro (acg_qt5)
+macro (vci_qt5)
 
   if(POLICY CMP0020)
     # Automatically link Qt executables to qtmain target on Windows
@@ -72,7 +72,7 @@ macro (acg_qt5)
   endif(Qt5Core_FOUND)
 
   if (QT5_FOUND)
-    acg_unset_qt_shared_variables(5)
+    vci_unset_qt_shared_variables(5)
 
     #set plugin dir
     list(GET Qt5Gui_PLUGINS 0 _plugin)
@@ -135,7 +135,7 @@ macro (acg_qt5)
 endmacro ()
 
 #generates qt translations
-function (acg_add_translations _target _languages _sources)
+function (vci_add_translations _target _languages _sources)
 
   string (TOUPPER ${_target} _TARGET)
   # generate/use translation files
@@ -176,8 +176,8 @@ function (acg_add_translations _target _languages _sources)
   # Build translations with the application
   add_dependencies(${_target} tr_${_target} )
 
-  if (NOT EXISTS ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_DATADIR}/Translations)
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_DATADIR}/Translations )
+  if (NOT EXISTS ${CMAKE_BINARY_DIR}/Build/${VCI_PROJECT_DATADIR}/Translations)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Build/${VCI_PROJECT_DATADIR}/Translations )
   endif ()
 
   foreach (_qm ${_qm_files})
@@ -186,11 +186,11 @@ function (acg_add_translations _target _languages _sources)
       COMMAND ${CMAKE_COMMAND} -E
       copy_if_different
       ${_qm}
-      ${CMAKE_BINARY_DIR}/Build/${ACG_PROJECT_DATADIR}/Translations/${_qm_name})
+      ${CMAKE_BINARY_DIR}/Build/${VCI_PROJECT_DATADIR}/Translations/${_qm_name})
   endforeach ()
 
-  if (NOT ACG_PROJECT_MACOS_BUNDLE OR NOT APPLE)
-    install (FILES ${_qm_files} DESTINATION "${ACG_PROJECT_DATADIR}/Translations")
+  if (NOT VCI_PROJECT_MACOS_BUNDLE OR NOT APPLE)
+    install (FILES ${_qm_files} DESTINATION "${VCI_PROJECT_DATADIR}/Translations")
   endif ()
 endfunction ()
 
@@ -206,7 +206,7 @@ function (generate_qhp_file files_loc plugin_name)
   foreach (_line ${qhp_template})
     string(STRIP ${_line} stripped)
     if("${stripped}" STREQUAL "files")
-      acg_get_files_in_dir (_files ${files_loc})
+      vci_get_files_in_dir (_files ${files_loc})
       foreach (_file ${_files})
         string(REGEX MATCH ".+[.]+((html)|(htm)|(xml))$" fileresult ${_file})
         string(LENGTH "${fileresult}" len)

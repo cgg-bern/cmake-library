@@ -43,11 +43,11 @@ IF (DOXYGEN_FOUND)
     MESSAGE(STATUS "dvips command DVIPS_CONVERTER not found but usually required.")
   ENDIF (NOT DVIPS_CONVERTER)
   
-  # This macro generates a new doc target. acg_create_doc_target( targetName [directory with the doxy.config.in] [dependency])
+  # This macro generates a new doc target. vci_create_doc_target( targetName [directory with the doxy.config.in] [dependency])
   # if no parameter is used except the target, a target of the given name will be created from the current source directories doxyfile and added as a dependency to the doc target
   # The first additional parameter is used to specify a directory where the doxyfile will be used
   # The second parameter defines a target, that will depend on the newly generated one. (Default is doc)
-  macro (acg_create_doc_target target)
+  macro (vci_create_doc_target target)
 
     set( DOC_DIRECTORY  "${CMAKE_CURRENT_SOURCE_DIR}" )
     set( DOC_DEPENDENCY "doc")
@@ -61,7 +61,7 @@ IF (DOXYGEN_FOUND)
     elseif( $ARGC GREATER 3 )
       set( DOC_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" )
       # failed as we do not know how to handle the parameters
-      MESSAGE(SEND_ERROR "Unknown parameter for acg_create_doc_target!")
+      MESSAGE(SEND_ERROR "Unknown parameter for vci_create_doc_target!")
     endif()
 
     if("${DOC_DEPENDENCY}" STREQUAL "doc")
