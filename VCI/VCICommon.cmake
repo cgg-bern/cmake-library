@@ -1,4 +1,6 @@
 include (MSVCMacros)
+include (VCIPaths)
+
 if (EXISTS ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME}.cmake)
   include (${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME}.cmake)
 endif ()
