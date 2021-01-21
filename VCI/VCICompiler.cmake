@@ -152,6 +152,8 @@ if (UNIX)
   # Process the additional flags:
   ################################################################################
 
+  cmake_policy(SET CMP0057 NEW) 
+
   get_property(languages GLOBAL PROPERTY ENABLED_LANGUAGES)
 
   IF ( "CXX" IN_LIST languages  )
