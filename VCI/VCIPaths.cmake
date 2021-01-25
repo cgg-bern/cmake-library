@@ -8,7 +8,8 @@ if ( WIN32 )
     DOC "Default library search dir for on windows."
     HINTS "C:/libs/"
           "D:/libs/"
-          "E:/libs/")
+          "E:/libs/"
+          "R:/libs/")
 
   if (VCI_WINDOWS_LIBS_DIR)
     # add path to general libs
