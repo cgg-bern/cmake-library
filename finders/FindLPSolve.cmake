@@ -9,13 +9,15 @@ find_path(LPSOLVE_INCLUDE_DIR
                 /usr/local/include
                 /usr/include
                 ${VS_SEARCH_PATH}/lpsolve-5.5.2.11/include
+                ~/sw/lpsolve-5.5.2.11/include
           )
           
 find_library(LPSOLVE_LIBRARY
-             NAMES liblpsolve55
+             NAMES lpsolve55
              HINTS ${LPSOLVE_DIR}
                    ${LPSOLVE_DIR}/lib
                    ${VS_SEARCH_PATH}/lpsolve-5.5.2.11/lib
+                   ~/sw/lpsolve-5.5.2.11/lib
              PATHS /usr/local/lib
                    /usr/lib
             )
