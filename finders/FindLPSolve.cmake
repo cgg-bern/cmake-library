@@ -21,14 +21,16 @@ find_library(LPSOLVE_LIBRARY
              PATHS /usr/local/lib
                    /usr/lib
             )
-            
+
+get_filename_component(LPSOLVE_LIBRARY_DIR ${LPSOLVE_LIBRARY} DIRECTORY CACHE)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LPSOLVE DEFAULT_MSG LPSOLVE_INCLUDE_DIR LPSOLVE_LIBRARY)
+find_package_handle_standard_args(LPSOLVE DEFAULT_MSG LPSOLVE_INCLUDE_DIR LPSOLVE_LIBRARY LPSOLVE_LIBRARY_DIR)
 
 if(LPSOLVE_FOUND AND NOT TARGET lpsolve::lpsolve)
     add_library(lpsolve::lpsolve INTERFACE IMPORTED)
     target_include_directories(lpsolve::lpsolve INTERFACE ${LPSOLVE_INCLUDE_DIR})
+    target_link_directories(lpsolve::lpsolve INTERFACE ${LPSOLVE_LIBRARY_DIR})
     target_link_libraries(lpsolve::lpsolve INTERFACE ${LPSOLVE_LIBRARY})
 endif()
 
