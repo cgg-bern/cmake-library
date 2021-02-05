@@ -9,7 +9,7 @@ project(CMakeLibraryCITest)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../finders")
 
 find_package(GMM)
-find_package(GUROBI)
+find_package(Gurobi)
 
 
 enable_testing()
