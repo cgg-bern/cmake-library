@@ -1,4 +1,4 @@
-find_package(Gurobi REQUIRED)
+find_package(GUROBI REQUIRED)
 
 add_executable(test_c "test_c.c")
 target_link_libraries(test_c Gurobi::Gurobi)
