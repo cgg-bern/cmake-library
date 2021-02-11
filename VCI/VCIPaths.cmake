@@ -43,5 +43,6 @@ if ( WIN32 )
       SET(VS_SEARCH_PATH "${VCI_WINDOWS_LIBS_DIR}/vs2017/x32/")
     endif()
   endif()
-
+else()
+   set(GUROBI_HOME "/opt/gurobi902/linux64/")
 endif( WIN32 )
