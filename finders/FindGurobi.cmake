@@ -105,6 +105,12 @@ if(TARGET Gurobi::GurobiC AND GUROBI_CXX_SRC AND NOT TARGET Gurobi::GurobiCXX)
     add_library(GurobiCXX STATIC EXCLUDE_FROM_ALL ${GUROBI_CXX_SRC})
     add_library(Gurobi::GurobiCXX ALIAS GurobiCXX)
 
+    target_compile_options(GurobiCXX
+        PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
+        )
+
     if(MSVC)
         target_compile_definitions(GurobiCXX PRIVATE "WIN64")
     endif()
