@@ -10,7 +10,7 @@ macro (vci_unset_qt_shared_variables version)
   set (VCI_INTERNAL_QT_LAST_VERSION "${version}" CACHE INTERNAL "Qt Version, which was used on the last time")
 endmacro()
 
-macro (vci_qt5)
+macro (vci_qt)
 
   if(POLICY CMP0020)
     # Automatically link Qt executables to qtmain target on Windows
@@ -20,16 +20,16 @@ macro (vci_qt5)
 
   #set (QT_MIN_VERSION ${ARGN})
 
-  #try to find qt5 automatically
-  #for custom installation of qt5, dont use any of these variables
-  set (QT5_INSTALL_PATH "" CACHE PATH "Path to Qt5 directory which contains lib and include folder")
+  set (QT_INSTALL_PATH "" CACHE PATH "Path to Qt directory which contains lib and include folder")
 
-  if (EXISTS "${QT5_INSTALL_PATH}")
-    set (CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${QT5_INSTALL_PATH}")
-    set (QT5_INSTALL_PATH_EXISTS TRUE)
-  endif(EXISTS "${QT5_INSTALL_PATH}")
+  if (EXISTS "${QT_INSTALL_PATH}")
+    set (CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${QT_INSTALL_PATH}")
+    set (QT_INSTALL_PATH_EXISTS TRUE)
+  else()
+    set (QT_INSTALL_PATH_EXISTS FALSE)
+  endif(EXISTS "${QT_INSTALL_PATH}")
 
-  set(QT5_FINDER_FLAGS "" CACHE STRING "Flags for the Qt finder e.g.
+  set(QT_FINDER_FLAGS "" CACHE STRING "Flags for the Qt finder e.g.
                                                        NO_DEFAULT_PATH if no system installed Qt shall be found")
   # compute default search paths
   set(SUPPORTED_QT_VERSIONS 5.11 5.10 5.9 5.8 5.7 5.6)
@@ -80,19 +80,19 @@ macro (vci_qt5)
       get_target_property(_plugin_full ${_plugin} LOCATION)
       get_filename_component(_plugin_dir ${_plugin_full} PATH)
       set (QT_PLUGINS_DIR "${_plugin_dir}/../" CACHE PATH "Path to the qt plugin directory")
-    elseif(QT5_INSTALL_PATH_EXISTS)
-      set (QT_PLUGINS_DIR "${QT5_INSTALL_PATH}/plugins/" CACHE PATH "Path to the qt plugin directory")
+    elseif(QT_INSTALL_PATH_EXISTS)
+      set (QT_PLUGINS_DIR "${QT_INSTALL_PATH}/plugins/" CACHE PATH "Path to the qt plugin directory")
     elseif()
       set (QT_PLUGINS_DIR "QT_PLUGIN_DIR_NOT_FOUND" CACHE PATH "Path to the qt plugin directory")
     endif(_plugin)
 
     #set binary dir for fixupbundle
-    if(QT5_INSTALL_PATH_EXISTS)
-      set(_QT_BINARY_DIR "${QT5_INSTALL_PATH}/bin")
+    if(QT_INSTALL_PATH_EXISTS)
+      set(_QT_BINARY_DIR "${QT_INSTALL_PATH}/bin")
     else()
       get_target_property(_QT_BINARY_DIR ${Qt5Widgets_UIC_EXECUTABLE} LOCATION)
       get_filename_component(_QT_BINARY_DIR ${_QT_BINARY_DIR} PATH)
-    endif(QT5_INSTALL_PATH_EXISTS)
+    endif(QT_INSTALL_PATH_EXISTS)
 
     set (QT_BINARY_DIR "${_QT_BINARY_DIR}" CACHE PATH "Qt5 binary Directory")
     mark_as_advanced(QT_BINARY_DIR)
