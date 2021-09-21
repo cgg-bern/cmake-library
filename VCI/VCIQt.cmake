@@ -16,7 +16,7 @@ macro (vci_qt)
     # Automatically link Qt executables to qtmain target on Windows
     cmake_policy(SET CMP0020 NEW)
   endif(POLICY CMP0020)
-  #if (NOT QT5_FOUND)
+  #if (NOT QT6_FOUND)
 
   #set (QT_MIN_VERSION ${ARGN})
 
@@ -31,48 +31,88 @@ macro (vci_qt)
 
   set(QT_FINDER_FLAGS "" CACHE STRING "Flags for the Qt finder e.g.
                                                        NO_DEFAULT_PATH if no system installed Qt shall be found")
+
   # compute default search paths
-  set(SUPPORTED_QT_VERSIONS 5.11 5.10 5.9 5.8 5.7 5.6)
-  foreach (suffix gcc_64 clang_64)
-    foreach(version ${SUPPORTED_QT_VERSIONS})
-      list(APPEND QT_DEFAULT_PATH "~/sw/Qt/${version}/${suffix}")
+  set(SUPPORTED_QT_VERSIONS 6.1.2 6.0.4 6.0.3 5.15.2 5.12.2 5.11.3 5.11 5.10 5.9 5.8 5.7 5.6)
+  if (NOT QT_INSTALL_PATH_EXISTS)
+    message("-- No QT path specified (or does not exist) - searching in common locations...")
+    foreach (suffix gcc_64 clang_64)
+      foreach(version ${SUPPORTED_QT_VERSIONS})
+        foreach(prefix ~/sw/Qt ~/Qt)
+          # default institute qt path
+          list(APPEND QT_DEFAULT_PATH "${prefix}/${version}/${suffix}")
+          set (CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${prefix}/${version}/${suffix}")
+        endforeach()
+      endforeach()
     endforeach()
-  endforeach()
+  endif()
 
-  find_package (Qt5Core PATHS ${QT_DEFAULT_PATH} ${QT5_FINDER_FLAGS})
-  if(Qt5Core_FOUND)
+  # QtX11Extras only on Linux
+  #if(NOT WIN32 AND NOT APPLE)
+  #  list(APPEND QT_REQUIRED_PACKAGES X11Extras)
+  #endif()
 
-    if(Qt5Core_VERSION) # use the new version variable if it is set
-      set(Qt5Core_VERSION_STRING ${Qt5Core_VERSION})
-    endif(Qt5Core_VERSION)
+  # search for qt5 and qt6 installations offering requested components
+  set(QT_VERSION "5" CACHE STRING "Override default qt version preference of qt6.")
+  set(QT_DEFAULT_MAJOR_VERSION ${QT_VERSION})
+
+  # find qt
+  find_package (Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS ${QT_REQUIRED_PACKAGES} PATHS ${QT_DEFAULT_PATH} ${QT_FINDER_FLAGS})
+
+  # find version specific components
+  if (Qt${QT_DEFAULT_MAJOR_VERSION}_FOUND AND QT${QT_DEFAULT_MAJOR_VERSION}_REQUIRED_PACKAGES)
+    find_package (Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS ${QT${QT_DEFAULT_MAJOR_VERSION}_REQUIRED_PACKAGES} PATHS ${QT_DEFAULT_PATH} ${QT_FINDER_FLAGS})
+  endif()
+
+  # set helpers
+  set(QT6_FOUND ${Qt6_FOUND})
+  set(QT5_FOUND ${Qt5_FOUND})
+  if (QT6_FOUND OR QT5_FOUND)
+    set(Qt_FOUND 1)
+  else()
+    set(Qt_FOUND 0)
+  endif()
+  set(QT_FOUND ${Qt_FOUND})
+
+  # Use qt without version
+  if (NOT QT_FOUND)
+    set(QT_DEFAULT_MAJOR_VERSION 0)
+  endif()
+
+  # output some info
+  if (QT5_FOUND)
+    message("-- Found QT5")
+  endif()
+  if (QT6_FOUND)
+    message("-- Found QT6")
+  endif()
+
+  if (NOT QT_FOUND)
+    message("QT not found.")
+  endif()
+
+  if(QT_FOUND)
+    if(Qt${QT_DEFAULT_MAJOR_VERSION}_VERSION) # use the new version variable if it is set
+      set(Qt_VERSION_STRING ${Qt${QT_DEFAULT_MAJOR_VERSION}_VERSION})
+    endif()
+
+    message("-- Using QT${QT_DEFAULT_MAJOR_VERSION} (${Qt_VERSION_STRING})")
+
+    set(QT_TARGET "Qt${QT_DEFAULT_MAJOR_VERSION}")
 
     string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1"
-      QT_VERSION_MAJOR "${Qt5Core_VERSION_STRING}")
+      QT_VERSION_MAJOR "${Qt_VERSION_STRING}")
     string(REGEX REPLACE "^[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1"
-      QT_VERSION_MINOR "${Qt5Core_VERSION_STRING}")
+      QT_VERSION_MINOR "${Qt_VERSION_STRING}")
     string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1"
-      QT_VERSION_PATCH "${Qt5Core_VERSION_STRING}")
+      QT_VERSION_PATCH "${Qt_VERSION_STRING}")
 
-    # QtX11Extras only on Linux
-    if(NOT WIN32 AND NOT APPLE)
-      list(APPEND QT5_REQUIRED_PACKAGES
-        Qt5X11Extras
-        )
-    endif(NOT WIN32 AND NOT APPLE)
+    vci_unset_qt_shared_variables(${QT_DEFAULT_MAJOR_VERSION})
 
-    set(QT5_FOUND TRUE)
-    foreach(QT_PACKAGE IN LISTS QT5_REQUIRED_PACKAGES)
-      find_package ("${QT_PACKAGE}" QUIET PATHS ${QT_DEFAULT_PATH} ${QT5_FINDER_FLAGS})
-      if(NOT "${${QT_PACKAGE}_FOUND}")
-        set(QT5_FOUND FALSE)
-        message("${QT_PACKAGE} not found!")
-      endif()
-    endforeach(QT_PACKAGE)
+    add_compile_definitions(QT_VERSION_MAJOR=${QT_VERSION_MAJOR})
+    add_compile_definitions(QT_VERSION_MINOR=${QT_VERSION_MINOR})
+    add_compile_definitions(QT_VERSION_PATCH=${QT_VERSION_PATCH})
 
-  endif(Qt5Core_FOUND)
-
-  if (QT5_FOUND)
-    vci_unset_qt_shared_variables(5)
 
     #set plugin dir
     list(GET Qt5Gui_PLUGINS 0 _plugin)
@@ -86,31 +126,39 @@ macro (vci_qt)
       set (QT_PLUGINS_DIR "QT_PLUGIN_DIR_NOT_FOUND" CACHE PATH "Path to the qt plugin directory")
     endif(_plugin)
 
-    #set binary dir for fixupbundle
+    # set binary dir for fixupbundle
     if(QT_INSTALL_PATH_EXISTS)
       set(_QT_BINARY_DIR "${QT_INSTALL_PATH}/bin")
     else()
-      get_target_property(_QT_BINARY_DIR ${Qt5Widgets_UIC_EXECUTABLE} LOCATION)
+      get_target_property(_QT_BINARY_DIR "Qt${QT_DEFAULT_MAJOR_VERSION}::uic" LOCATION)
       get_filename_component(_QT_BINARY_DIR ${_QT_BINARY_DIR} PATH)
     endif(QT_INSTALL_PATH_EXISTS)
 
-    set (QT_BINARY_DIR "${_QT_BINARY_DIR}" CACHE PATH "Qt5 binary Directory")
+    set (QT_BINARY_DIR "${_QT_BINARY_DIR}" CACHE PATH "Qt binary Directory")
     mark_as_advanced(QT_BINARY_DIR)
 
     set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-    foreach(QT_PACKAGE IN LISTS QT5_REQUIRED_PACKAGES)
-      include_directories(${${QT_PACKAGE}_INCLUDE_DIRS})
-      add_definitions(${${QT_PACKAGE}_DEFINITIONS})
-      list(APPEND QT_LIBRARIES ${${QT_PACKAGE}_LIBRARIES})
-    endforeach(QT_PACKAGE)
+    foreach(QT_PACKAGE IN LISTS QT_REQUIRED_PACKAGES)
+      include_directories(${Qt${QT_DEFAULT_MAJOR_VERSION}${QT_PACKAGE}_INCLUDE_DIRS})
+      # add_definitions(${Qt${QT_DEFAULT_MAJOR_VERSION}${QT_PACKAGE}_DEFINITIONS})
+      list(APPEND QT_LIBRARIES ${Qt${QT_DEFAULT_MAJOR_VERSION}${QT_PACKAGE}_LIBRARIES})
+    endforeach()
+
+    if (QT${QT_DEFAULT_MAJOR_VERSION}_REQUIRED_PACKAGES)
+      foreach(QT_PACKAGE IN LISTS QT${QT_DEFAULT_MAJOR_VERSION}_REQUIRED_PACKAGES)
+        include_directories(${Qt${QT_DEFAULT_MAJOR_VERSION}${QT_PACKAGE}_INCLUDE_DIRS})
+        # add_definitions(${Qt${QT_DEFAULT_MAJOR_VERSION}${QT_PACKAGE}_DEFINITIONS})
+        list(APPEND QT_LIBRARIES ${Qt${QT_DEFAULT_MAJOR_VERSION}${QT_PACKAGE}_LIBRARIES})
+      endforeach()
+    endif()
 
     if(NOT MSVC)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     endif()
 
     if(MSVC)
-      set(QT_LIBRARIES ${QT_LIBRARIES} ${Qt5Core_QTMAIN_LIBRARIES})
+      set(QT_LIBRARIES ${QT_LIBRARIES} ${Qt_QTMAIN_LIBRARIES})
     endif()
 
     #adding QT_NO_DEBUG to all release modes.
@@ -129,7 +177,7 @@ macro (vci_qt)
       if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_definitions(-DQT_NO_DEBUG)
       endif()
-    endif(MSVC_IDE)
+    endif()
 
   endif ()
 endmacro ()
