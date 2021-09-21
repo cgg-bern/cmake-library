@@ -10,15 +10,21 @@ macro (vci_unset_qt_shared_variables version)
   set (VCI_INTERNAL_QT_LAST_VERSION "${version}" CACHE INTERNAL "Qt Version, which was used on the last time")
 endmacro()
 
+
+# Macro to help find qt
+# Variables used:
+# QT_INSTALL_PATH : Path to a qt installation which contains lib and include folder
+# QT_VERSION : (5/6) Default to qt 5 or 6
+# QT_REQUIRED_PACKAGES : Required qt packages
+# QT5_REQUIRED_PACKAGES : Required qt packages specific to qt5 only
+# QT6_REQUIRED_PACKAGES : Required qt packages specific to qt6 only
+
 macro (vci_qt)
 
   if(POLICY CMP0020)
     # Automatically link Qt executables to qtmain target on Windows
     cmake_policy(SET CMP0020 NEW)
   endif(POLICY CMP0020)
-  #if (NOT QT6_FOUND)
-
-  #set (QT_MIN_VERSION ${ARGN})
 
   set (QT_INSTALL_PATH "" CACHE PATH "Path to Qt directory which contains lib and include folder")
 
