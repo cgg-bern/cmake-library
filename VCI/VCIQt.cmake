@@ -12,13 +12,18 @@ endmacro()
 
 
 # Macro to help find qt
-# Variables used:
-# QT_INSTALL_PATH : Path to a qt installation which contains lib and include folder
+#
+# Input Variables used:
+# QT_INSTALL_PATH : Path to a qt installation which contains lib and include folder (If not given, automatic search is active)
 # QT_VERSION : (5/6) Default to qt 5 or 6
 # QT_REQUIRED_PACKAGES : Required qt packages
 # QT5_REQUIRED_PACKAGES : Required qt packages specific to qt5 only
 # QT6_REQUIRED_PACKAGES : Required qt packages specific to qt6 only
-
+#
+# QT5_FOUND : Qt5 found
+# QT6_FOUND : Qt6 found
+# QT_FOUND : Any qt found?
+#
 macro (vci_qt)
 
   if(POLICY CMP0020)
