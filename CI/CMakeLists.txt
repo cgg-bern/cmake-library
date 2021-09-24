@@ -10,6 +10,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../finders")
 
 find_package(GMM)
 find_package(Gurobi)
+find_package(Mosek)
 
 
 enable_testing()
