@@ -124,19 +124,30 @@ macro (vci_qt)
     add_compile_definitions(QT_VERSION_MINOR=${QT_VERSION_MINOR})
     add_compile_definitions(QT_VERSION_PATCH=${QT_VERSION_PATCH})
 
-
-    #set plugin dir
-    list(GET Qt5Gui_PLUGINS 0 _plugin)
-    if (_plugin)
-      get_target_property(_plugin_full ${_plugin} LOCATION)
-      get_filename_component(_plugin_dir ${_plugin_full} PATH)
-      set (QT_PLUGINS_DIR "${_plugin_dir}/../" CACHE PATH "Path to the qt plugin directory")
-    elseif(QT_INSTALL_PATH_EXISTS)
-      set (QT_PLUGINS_DIR "${QT_INSTALL_PATH}/plugins/" CACHE PATH "Path to the qt plugin directory")
-    elseif()
-      set (QT_PLUGINS_DIR "QT_PLUGIN_DIR_NOT_FOUND" CACHE PATH "Path to the qt plugin directory")
-    endif(_plugin)
-
+    if (QT5_FOUND)
+      #set plugin dir
+      list(GET Qt5Gui_PLUGINS 0 _plugin)
+      if (_plugin)
+        get_target_property(_plugin_full ${_plugin} LOCATION)
+        get_filename_component(_plugin_dir ${_plugin_full} PATH)
+        set (QT_PLUGINS_DIR "${_plugin_dir}/../" CACHE PATH "Path to the qt plugin directory")
+      elseif(QT_INSTALL_PATH_EXISTS)
+        set (QT_PLUGINS_DIR "${QT_INSTALL_PATH}/plugins/" CACHE PATH "Path to the qt plugin directory")
+      elseif()
+        set (QT_PLUGINS_DIR "QT_PLUGIN_DIR_NOT_FOUND" CACHE PATH "Path to the qt plugin directory")
+      endif(_plugin)
+	endif()
+	
+	if (QT6_FOUND)
+	    #TODO : FInd a cleaner solution!!!!
+		
+	    get_target_property(_QT_BINARY_DIR "Qt${QT_DEFAULT_MAJOR_VERSION}::uic" LOCATION)
+		get_filename_component(_QT_BINARY_DIR "${_QT_BINARY_DIR}" DIRECTORY)
+		set (QT_PLUGINS_DIR "${_QT_BINARY_DIR}/../plugins" CACHE PATH "Path to the qt plugin directory")      
+	endif()
+	
+	
+	
     # set binary dir for fixupbundle
     if(QT_INSTALL_PATH_EXISTS)
       set(_QT_BINARY_DIR "${QT_INSTALL_PATH}/bin")
