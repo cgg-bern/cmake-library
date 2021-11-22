@@ -20,10 +20,6 @@ if ( WIN32 )
 	  list(APPEND ADDITIONAL_CMAKE_SHARED_LINKER_FLAGS    "/LARGEADDRESSAWARE" )
 	  list(APPEND ADDITIONAL_CMAKE_MODULE_LINKER_FLAGS    "/LARGEADDRESSAWARE" )
     endif()  
-       
-    if (MINGW)
-       list(APPEND ADDITIONAL_CXX_FLAGS       "-Wa,-mbig-obj" )
-    endif()	
   endif()
   
   
