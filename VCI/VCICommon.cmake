@@ -37,47 +37,6 @@ if (NOT EXISTS ${CMAKE_BINARY_DIR}/Build)
   file (MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Build)
 endif ()
 
-# read version from file
-macro (vci_get_version)
-    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${ARGN}/VERSION")
-      file (READ "${CMAKE_CURRENT_SOURCE_DIR}/${ARGN}/VERSION" _file)
-    else ()
-      file (READ "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" _file)
-    endif ()
-
-    string (
-        REGEX REPLACE
-        "^.*ID=([^\n]*).*$" "\\1"
-        _id ${_file}
-    )
-    string (
-        REGEX REPLACE
-        "^.*VERSION=([^\n]*).*$" "\\1"
-        _version ${_file}
-    )
-    string (
-        REGEX REPLACE
-        "^.*MAJOR=([^\n]*).*$" "\\1"
-        _major ${_file}
-    )
-    string (
-        REGEX REPLACE
-        "^.*MINOR=([^\n]*).*$" "\\1"
-        _minor ${_file}
-    )
-    string (
-        REGEX REPLACE
-        "^.*PATCH=([^\n]*).*$" "\\1"
-        _patch ${_file}
-    )
-
-    set (${_id}_VERSION ${_version})
-    set (${_id}_VERSION_MAJOR ${_major})
-    set (${_id}_VERSION_MINOR ${_minor})
-    set (${_id}_VERSION_PATCH ${_patch})
-endmacro ()
-
-
 # set directory structures for the different platforms
 if (CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
   set (VCI_PROJECT_DATADIR ".")
