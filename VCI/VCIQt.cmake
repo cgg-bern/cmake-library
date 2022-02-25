@@ -223,6 +223,10 @@ function (vci_add_translations _target _languages _sources)
     endif ()
   endforeach ()
 
+  if (QT5_FOUND) 
+    FIND_PACKAGE( Qt5LinguistTools )
+  endif()
+
   if (QT6_FOUND)
     FIND_PACKAGE( Qt6LinguistTools )
   endif()
