@@ -25,13 +25,15 @@ set(GUROBI_LIB_DIR "${GUROBI_HOME}/lib")
 if (WIN32)
     file(GLOB GUROBI_LIBRARY_LIST
         RELATIVE ${GUROBI_BIN_DIR}
-        ${GUROBI_BIN_DIR}/gurobi*.dll
-        )
+        ${GUROBI_BIN_DIR}/gurobi*.dll)
+elseif(APPLE)
+      file(GLOB GUROBI_LIBRARY_LIST
+              RELATIVE ${GUROBI_LIB_DIR}
+              ${GUROBI_LIB_DIR}/libgurobi*.dylib)
 else()
     file(GLOB GUROBI_LIBRARY_LIST
         RELATIVE ${GUROBI_LIB_DIR}
-        ${GUROBI_LIB_DIR}/libgurobi*.so
-        )
+        ${GUROBI_LIB_DIR}/libgurobi*.so)
 endif()
 
 # Ignore libgurobiXY_light.so, libgurobi.so (without version):
