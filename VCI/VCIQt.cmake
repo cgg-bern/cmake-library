@@ -64,7 +64,7 @@ macro (vci_qt)
   #endif()
 
   # search for qt5 and qt6 installations offering requested components
-  set(QT_VERSION "5" CACHE STRING "Override default qt version preference of qt6.")
+  set(QT_VERSION "6" CACHE STRING "Override default qt version preference of qt6.")
   set(QT_DEFAULT_MAJOR_VERSION ${QT_VERSION})
 
   # find qt
