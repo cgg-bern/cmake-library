@@ -1,5 +1,3 @@
-set(CMAKE_FIND_DEBUG_MODE TRUE)
-
 set(LPSOLVE_DIR $ENV{LPSOLVE_DIR} CACHE PATH "lpsolve directory (contain include/lp_lib.h).")
 
 find_path(LPSOLVE_INCLUDE_DIR
@@ -11,7 +9,7 @@ find_path(LPSOLVE_INCLUDE_DIR
                 ${VS_SEARCH_PATH}/lpsolve-5.5.2.11/include
                 ~/sw/lpsolve-5.5.2.11/include
           )
-          
+
 find_library(LPSOLVE_LIBRARY
              NAMES lpsolve55
              HINTS ${LPSOLVE_DIR}
@@ -36,5 +34,3 @@ endif()
 
 mark_as_advanced(LPSOLVE_INCLUDE_DIR)
 mark_as_advanced(LPSOLVE_LIBRARY)
-
-set(CMAKE_FIND_DEBUG_MODE FALSE)
