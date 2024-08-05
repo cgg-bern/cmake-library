@@ -19,6 +19,8 @@ if (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
     set(DEFAULT_MOSEK_PLATFORM "win64x86")
 elseif (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
     set(DEFAULT_MOSEK_PLATFORM "osx64x86")
+    # TODO: arm64 (also on other platforms). I currently don't have Mosek installed,
+    # so I cant't test this.
 elseif (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
     set(DEFAULT_MOSEK_PLATFORM "linux64x86")
 else()
