@@ -12,6 +12,7 @@ find_path(CLP_INCLUDE_DIR
           PATHS "$ENV{CLP_DIR}/include/coin"
                 "/opt/homebrew/include/clp/coin"  #homebrew default path
                 "/usr/local/include/clp/coin"     #homebrew default path
+                "/usr/local/include/coin-or"
                 "/usr/include/coin"
                 "/usr/include/coin-or"
                  "C:\\libs\\clp\\include"
