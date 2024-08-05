@@ -13,6 +13,7 @@ find_path(CLP_INCLUDE_DIR
                 "/opt/homebrew/include/clp/coin"  #homebrew default path
                 "/usr/local/include/clp/coin"     #homebrew default path
                 "/usr/include/coin"
+                "/usr/include/coin-or"
                  "C:\\libs\\clp\\include"
                  "C:\\libs\\cbc\\include"
                  "${VS_SEARCH_PATH}CBC-2.9.7/Clp/include"
@@ -24,8 +25,11 @@ find_library( CLP_LIBRARY
               PATHS "$ENV{CLP_DIR}/lib"
                     "/opt/homebrew/lib"  # homebrew default path
                     "/usr/local/lib"     # homebrew default path
-                    "/usr/lib"
+                    "/usr/local/lib/coin-or"
+                    "/usr/local/lib/coin"
+                    "/usr/lib/coin-or"
                     "/usr/lib/coin"
+                    "/usr/lib"
                     "C:\\libs\\clp\\lib"
                     "C:\\libs\\cbc\\lib"
               )

@@ -6,9 +6,12 @@ find_path(CoinUtils_INCLUDE_DIR
           PATHS "$ENV{CoinUtils_DIR}/include/coin"
                 "/opt/homebrew/include/coinutils/coin"  #homebrew default path
                 "/usr/local/include/coinutils/coin"     #homebrew default path
+                "/usr/local/include/coin-or"
                 "/usr/include/coinutils"
+                "/usr/include/coin-or"
                 "/usr/include/coin"
-                 "C:\\libs\\coinutils\\include"
+                "/usr/lib/coin-or"
+                "C:\\libs\\coinutils\\include"
               )
 
 find_library( CoinUtils_LIBRARY
@@ -16,8 +19,11 @@ find_library( CoinUtils_LIBRARY
               PATHS "$ENV{CoinUtils_DIR}/lib"
                     "/opt/homebrew/lib"  # homebrew default path
                     "/usr/local/lib"     # homebrew default path
-                    "/usr/lib"
+                    "/usr/local/lib/coin-or"
+                    "/usr/local/lib/coin"
+                    "/usr/lib/coin-or"
                     "/usr/lib/coin"
+                    "/usr/lib"
                     "C:\\libs\\clp\\lib"
               )
 
