@@ -4,6 +4,7 @@
 #       Gurobi::GurobiC   - only the C interface
 #       Gurobi::GurobiCXX - C and C++ interface
 
+if (NOT TARGET Gurobi::GurobiCXX)
 find_path(GUROBI_HOME
           NAMES include/gurobi_c++.h
           PATHS
@@ -131,3 +132,4 @@ set(GUROBI_LIBRARIES Gurobi::GurobiC Gurobi::GurobiCXX)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Gurobi  DEFAULT_MSG GUROBI_LIBRARY GUROBI_INCLUDE_DIR GUROBI_SRC_DIR)
 
+endif (NOT TARGET Gurobi::GurobiCXX)

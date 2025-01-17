@@ -2,9 +2,9 @@
 # On success, this will define the target Coin::CLP
 
 if(NOT TARGET Coin::CLP)
-    if (NOT TARGET Coin::CoinUtils)
-        find_package(CoinUtils REQUIRED)
-    endif()
+
+if(NOT TARGET Coin::CoinUtils)
+    find_package(CoinUtils REQUIRED)
 endif()
 
 find_path(CLP_INCLUDE_DIR
@@ -51,3 +51,4 @@ endif()
 
 
 mark_as_advanced(CLP_INCLUDE_DIR CLP_LIBRARY)
+endif(NOT TARGET Coin::CLP)

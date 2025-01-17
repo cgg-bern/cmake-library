@@ -6,6 +6,8 @@
 
 # Tested with Mosek 9.2 on Linux
 
+if (NOT TARGET Mosek::MosekC)
+
 find_path (MOSEK_BASE
     NAMES tools/platform
     HINTS $ENV{MOSEK_DIR}
@@ -79,3 +81,4 @@ set(MOSEK_LIBRARIES Mosek::MosekC Mosek::FusionCXX)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Mosek DEFAULT_MSG MOSEK_LIBRARY MOSEK_INCLUDE_DIR)
 
+endif (NOT TARGET Mosek::MosekC)

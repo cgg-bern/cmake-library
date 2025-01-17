@@ -1,6 +1,6 @@
 # Try to find Coin-ORs CoinUtils: https://www.coin-or.org/
 # On success, this will define the target Coin::CoinUtils
-
+if (NOT TARGET Coin::CoinUtils)
 find_path(CoinUtils_INCLUDE_DIR
             NAMES CoinPragma.hpp
           PATHS "$ENV{CoinUtils_DIR}/include/coin"
@@ -41,3 +41,4 @@ endif()
 
 
 mark_as_advanced(CoinUtils_INCLUDE_DIR CoinUtils_LIBRARY)
+endif (NOT TARGET Coin::CoinUtils)

@@ -1,3 +1,5 @@
+if(NOT TARGET GMSH::GMSH)
+
 set(GMSH_DIR $ENV{GMSH_DIR} CACHE PATH "GMSH directory (containing include/gmsh.h).")
 
 find_path(GMSH_INCLUDE_DIR
@@ -29,3 +31,4 @@ mark_as_advanced(GMSH_INCLUDE_DIR)
 mark_as_advanced(GMSH_LIBRARY)
 
 
+endif(NOT TARGET GMSH::GMSH)
