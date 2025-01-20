@@ -4,10 +4,12 @@
 if(NOT TARGET Coin::CLP)
 
 if(NOT TARGET Coin::CoinUtils)
-    find_package(CoinUtils REQUIRED)
+    find_package(CoinUtils QUIET)
 endif()
-
-find_path(CLP_INCLUDE_DIR
+if(NOT TARGET Coin::CoinUtils)
+    message("FindCLP: Did not find dependency CoinUtils.")
+else()
+    find_path(CLP_INCLUDE_DIR
           NAMES ClpConfig.h
           PATHS "$ENV{CLP_DIR}/include/coin"
                 "/opt/homebrew/include/clp/coin"  #homebrew default path
@@ -21,7 +23,7 @@ find_path(CLP_INCLUDE_DIR
                  "${VS_SEARCH_PATH}CBC-2.9.4/Clp/include"
               )
 
-find_library( CLP_LIBRARY
+    find_library( CLP_LIBRARY
               NAMES Clp libClp
               PATHS "$ENV{CLP_DIR}/lib"
                     "/opt/homebrew/lib"  # homebrew default path
@@ -35,20 +37,20 @@ find_library( CLP_LIBRARY
                     "C:\\libs\\cbc\\lib"
               )
 
-set(CLP_INCLUDE_DIRS "${CLP_INCLUDE_DIR}" )
-set(CLP_LIBRARIES "${CLP_LIBRARY}" )
+    set(CLP_INCLUDE_DIRS "${CLP_INCLUDE_DIR}" )
+    set(CLP_LIBRARIES "${CLP_LIBRARY}" )
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CLP  DEFAULT_MSG
-                                  CLP_LIBRARY CLP_INCLUDE_DIR)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(CLP  DEFAULT_MSG
+                                    CLP_LIBRARY CLP_INCLUDE_DIR)
 
-if(CLP_FOUND)
-    add_library(Coin::CLP SHARED IMPORTED)
-    set_property(TARGET Coin::CLP PROPERTY IMPORTED_LOCATION ${CLP_LIBRARY})
-    target_include_directories(Coin::CLP INTERFACE ${CLP_INCLUDE_DIR})
-    target_link_libraries(Coin::CLP INTERFACE Coin::CoinUtils)
+    if(CLP_FOUND)
+        add_library(Coin::CLP SHARED IMPORTED)
+        set_property(TARGET Coin::CLP PROPERTY IMPORTED_LOCATION ${CLP_LIBRARY})
+        target_include_directories(Coin::CLP INTERFACE ${CLP_INCLUDE_DIR})
+        target_link_libraries(Coin::CLP INTERFACE Coin::CoinUtils)
+    endif()
 endif()
-
 
 mark_as_advanced(CLP_INCLUDE_DIR CLP_LIBRARY)
 endif(NOT TARGET Coin::CLP)
