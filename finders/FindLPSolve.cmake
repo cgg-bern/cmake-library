@@ -1,3 +1,4 @@
+if(NOT TARGET lpsolve::lpsolve)
 set(LPSOLVE_DIR $ENV{LPSOLVE_DIR} CACHE PATH "lpsolve directory (contain include/lp_lib.h).")
 
 find_path(LPSOLVE_INCLUDE_DIR
@@ -34,3 +35,5 @@ endif()
 
 mark_as_advanced(LPSOLVE_INCLUDE_DIR)
 mark_as_advanced(LPSOLVE_LIBRARY)
+
+endif(NOT TARGET lpsolve::lpsolve)

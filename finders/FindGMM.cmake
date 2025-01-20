@@ -1,3 +1,5 @@
+if (NOT TARGET GMM::GMM)
+
 set(GMM_DIR $ENV{GMM_DIR} CACHE PATH "GMM directory (contain gmm/gmm.h).")
 
 find_path(GMM_INCLUDE_DIR
@@ -21,4 +23,4 @@ endif()
 
 mark_as_advanced(GMM_INCLUDE_DIR)
 
-
+endif(NOT TARGET GMM::GMM)

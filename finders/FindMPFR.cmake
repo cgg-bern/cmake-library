@@ -1,3 +1,4 @@
+if (NOT TARGET MPFR::MPFR)
 find_path(MPFR_INCLUDE_DIR
     NAMES mpfr.h
     PATHS /usr/local/include
@@ -23,3 +24,4 @@ endif()
 mark_as_advanced(MPFR_INCLUDE_DIR)
 mark_as_advanced(MPFR_LIBRARY)
 
+endif (NOT TARGET MPFR::MPFR)

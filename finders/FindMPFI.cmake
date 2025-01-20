@@ -1,3 +1,5 @@
+if (NOT TARGET MPFI::MPFI)
+
 find_path(MPFI_INCLUDE_DIR
     NAMES mpfi.h
     PATHS /usr/local/include
@@ -23,3 +25,4 @@ endif()
 mark_as_advanced(MPFI_INCLUDE_DIR)
 mark_as_advanced(MPFI_LIBRARY)
 
+endif (NOT TARGET MPFI::MPFI)

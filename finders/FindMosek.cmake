@@ -6,6 +6,8 @@
 
 # Tested with Mosek 9.2 on Linux
 
+if (NOT TARGET Mosek::MosekC)
+
 find_path (MOSEK_BASE
     NAMES tools/platform
     HINTS $ENV{MOSEK_DIR}
@@ -19,6 +21,8 @@ if (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
     set(DEFAULT_MOSEK_PLATFORM "win64x86")
 elseif (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
     set(DEFAULT_MOSEK_PLATFORM "osx64x86")
+    # TODO: arm64 (also on other platforms). I currently don't have Mosek installed,
+    # so I cant't test this.
 elseif (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
     set(DEFAULT_MOSEK_PLATFORM "linux64x86")
 else()
@@ -77,3 +81,4 @@ set(MOSEK_LIBRARIES Mosek::MosekC Mosek::FusionCXX)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Mosek DEFAULT_MSG MOSEK_LIBRARY MOSEK_INCLUDE_DIR)
 
+endif (NOT TARGET Mosek::MosekC)
