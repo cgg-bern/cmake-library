@@ -4,7 +4,11 @@
 if(NOT TARGET Coin::CLP)
 
 if(NOT TARGET Coin::CoinUtils)
-    find_package(CoinUtils REQUIRED)
+    find_package(CoinUtils QUIET)
+    if(NOT TARGET Coin::CoinUtils)
+        message(STATUS "FindCLP: Could not find CoinUtils as prerequisite of CLP.")
+        return()
+    endif()
 endif()
 
 find_path(CLP_INCLUDE_DIR
