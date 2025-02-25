@@ -1,3 +1,4 @@
+# Look for lp_solve: https://lpsolve.sourceforge.net/5.5/index.htm
 if(NOT TARGET lpsolve::lpsolve)
 set(LPSOLVE_DIR $ENV{LPSOLVE_DIR} CACHE PATH "lpsolve directory (contain include/lp_lib.h).")
 
@@ -24,7 +25,7 @@ find_library(LPSOLVE_LIBRARY
 get_filename_component(LPSOLVE_LIBRARY_DIR ${LPSOLVE_LIBRARY} DIRECTORY CACHE)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LPSOLVE DEFAULT_MSG LPSOLVE_INCLUDE_DIR LPSOLVE_LIBRARY LPSOLVE_LIBRARY_DIR)
+find_package_handle_standard_args(LPSolve DEFAULT_MSG LPSOLVE_INCLUDE_DIR LPSOLVE_LIBRARY LPSOLVE_LIBRARY_DIR)
 
 if(LPSOLVE_FOUND AND NOT TARGET lpsolve::lpsolve)
     add_library(lpsolve::lpsolve INTERFACE IMPORTED)
