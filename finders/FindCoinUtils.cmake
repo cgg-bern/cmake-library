@@ -29,6 +29,9 @@ find_library( CoinUtils_LIBRARY
 
 mark_as_advanced(CoinUtils_INCLUDE_DIR CoinUtils_LIBRARY)
 
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(CoinUtils DEFAULT_MSG CoinUtils_INCLUDE_DIR CoinUtils_LIBRARY)
+
 if(CoinUtils_FOUND)
     add_library(Coin::CoinUtils SHARED IMPORTED)
     set_property(TARGET Coin::CoinUtils PROPERTY IMPORTED_LOCATION ${CoinUtils_LIBRARY})
@@ -36,7 +39,5 @@ if(CoinUtils_FOUND)
     set(CoinUtils_LIBRARIES "Coin::CoinUtils" )
 endif()
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CoinUtils DEFAULT_MSG CoinUtils_LIBRARIES)
 
 endif (NOT TARGET Coin::CoinUtils)
