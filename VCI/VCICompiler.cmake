@@ -91,11 +91,9 @@ if (UNIX)
   # Add the standard compiler warnings
   if ( NOT COMPILER_WARNINGS )
    
-    IF ( APPLE  )
-      # Skip unused parameters as it has to be used for the documentation via doxygen and the interfaces
-      set ( COMPILER_WARNINGS "-W" "-Wall" "-Wno-unused" "-Wextra" "-Wno-non-virtual-dtor" "-Wno-unused-parameter" "-Wno-variadic-macros" CACHE STRINGLIST "This list contains the warning flags used during compilation " )
-    elseif ("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
-      set ( COMPILER_WARNINGS "-W" "-Wall" "-Wextra" "-Wno-non-virtual-dtor" "-Wno-unused-parameter" "-Wno-variadic-macros" CACHE STRINGLIST "This list contains the warning flags used during compilation " )
+    if ("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
+        # Skip unused parameters as it has to be used for the documentation via doxygen and the interfaces
+        set ( COMPILER_WARNINGS "-W" "-Wall" "-Wextra" "-Wno-unused" "-Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter" "-Wno-variadic-macros" CACHE STRINGLIST "This list contains the warning flags used during compilation " )
     ELSEIF ( CMAKE_SYSTEM MATCHES "SunOS*" )
       set ( COMPILER_WARNINGS "" CACHE STRINGLIST "This list contains the warning flags used during compilation " )
     ELSE ()
