@@ -90,8 +90,7 @@ if (UNIX)
   
   # Add the standard compiler warnings
   if ( NOT COMPILER_WARNINGS )
-   
-    if ("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
+      if ("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
         # Skip unused parameters as it has to be used for the documentation via doxygen and the interfaces
         set ( COMPILER_WARNINGS "-W" "-Wall" "-Wextra" "-Wno-unused" "-Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter" "-Wno-variadic-macros" CACHE STRINGLIST "This list contains the warning flags used during compilation " )
     ELSEIF ( CMAKE_SYSTEM MATCHES "SunOS*" )
