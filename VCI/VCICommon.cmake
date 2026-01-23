@@ -120,13 +120,8 @@ macro (vci_openmp)
   if (NOT OPENMP_FOUND)
      find_package(OpenMP)
      if (OPENMP_FOUND)
-       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-       set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-       add_definitions(-DUSE_OPENMP)
-
-       # export includes and libraries for usage within openflipper plugins
-       set(OPENMP_INCLUDE_DIRS ${OpenMP_CXX_INCLUDE_DIR})
-       set(OPENMP_LIBRARIES ${OpenMP_libomp_LIBRARY})        
+       add_definitions(-DUSE_OPENMP) # TODO: use _OPENMP instead?
+       set(OPENMP_LIBRARIES OpenMP::OpenMP_CXX)
     endif()
   endif()
 endmacro ()
