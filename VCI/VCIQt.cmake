@@ -44,12 +44,12 @@ macro (vci_qt)
                                                        NO_DEFAULT_PATH if no system installed Qt shall be found")
 
   # compute default search paths
-  set(SUPPORTED_QT_VERSIONS 6.2.2 6.2.1 6.1.2 6.0.4 6.0.3 5.15.2 5.12.2 5.11.3 5.11 5.10 5.9 5.8 5.7 5.6)
+  set(SUPPORTED_QT_VERSIONS 6.11.0 6.10.3 6.9.3 6.8.2 6.7.1 6.6.2 6.5.3 6.3.0 6.2.2 6.2.1 6.1.2 6.0.4 6.0.3 5.15.2 5.12.2 5.11.3 5.11 5.10 5.9 5.8 5.7 5.6)
   if (NOT QT_INSTALL_PATH_EXISTS)
     message("-- No QT path specified (or does not exist) - searching in common locations...")
     foreach (suffix gcc_64 clang_64)
       foreach(version ${SUPPORTED_QT_VERSIONS})
-        foreach(prefix ~/sw/Qt ~/Qt)
+        foreach(prefix /ACG/acgdev/gcc-x86_64/qt ~/sw/Qt ~/Qt)
           # default institute qt path
           list(APPEND QT_DEFAULT_PATH "${prefix}/${version}/${suffix}")
           set (CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${prefix}/${version}/${suffix}")
