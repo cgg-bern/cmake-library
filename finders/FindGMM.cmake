@@ -12,9 +12,9 @@ else()
             )
 
 
-    if(GMM_FOUND AND NOT TARGET GMM::GMM)
+    if(GMM_INCLUDE_DIR)
         add_library(GMM::GMM INTERFACE IMPORTED)
-        target_include_directories(GMM::GMM INTERFACE ${GMM_INCLUDE_DIR})
+        target_include_directories(GMM::GMM INTERFACE "${GMM_INCLUDE_DIR}")
         if(MSVC)
             target_compile_definitions(GMM::GMM INTERFACE "_SCL_SECURE_NO_DEPRECATE")
         endif()
